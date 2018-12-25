@@ -13,21 +13,26 @@ type AnyBuffer struct {
 	Buffer Resetter
 }
 
-type Any struct {
+type AnyPool struct {
 	cursor cursor
 	bufs   []AnyBuffer
 }
 
-func NewAny(maxParallel uint) *Any {
-	return &Any{
+func NewAnyPool(maxParallel uint, initFunc func(*AnyBuffer)) *AnyPool {
+	pool := &AnyPool{
 		cursor: *newCursor(maxParallel),
 		bufs:   make([]AnyBuffer, maxParallel),
 	}
+	if initFunc != nil {
+		for idx, _ := range pool.bufs {
+			initFunc(&pool.bufs[idx])
+		}
+	}
+	return pool
 }
 
-func (b *Any) Next() *AnyBuffer {
-	curIdx := b.cursor.Next()
-	buf := &b.bufs[curIdx]
+func (pool *AnyPool) Next() *AnyBuffer {
+	buf := &pool.bufs[pool.cursor.Next()]
 	buf.Lock()
 	buf.Buffer.Reset()
 	return buf

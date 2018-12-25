@@ -5,7 +5,7 @@ import (
 )
 
 func BenchmarkParallelBytesNext(b *testing.B) {
-	bufs := NewBytes(1024)
+	bufs := NewBytesPool(1024)
 	b.ResetTimer()
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
@@ -15,7 +15,7 @@ func BenchmarkParallelBytesNext(b *testing.B) {
 }
 
 func BenchmarkBytesAppend(b *testing.B) {
-	bufs := NewBytes(2)
+	bufs := NewBytesPool(2)
 
 	appendingData := []byte(`test string`)
 	tryAppend := func() {

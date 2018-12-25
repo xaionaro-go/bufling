@@ -9,21 +9,20 @@ type BytesBuffer struct {
 	Buffer []byte
 }
 
-type Bytes struct {
+type BytesPool struct {
 	cursor cursor
 	bufs   []BytesBuffer
 }
 
-func NewBytes(maxParallel uint) *Bytes {
-	return &Bytes{
+func NewBytesPool(maxParallel uint) *BytesPool {
+	return &BytesPool{
 		cursor: *newCursor(maxParallel),
 		bufs:   make([]BytesBuffer, maxParallel),
 	}
 }
 
-func (b *Bytes) Next() *BytesBuffer {
-	curIdx := b.cursor.Next()
-	buf := &b.bufs[curIdx]
+func (pool *BytesPool) Next() *BytesBuffer {
+	buf := &pool.bufs[pool.cursor.Next()]
 	buf.Lock()
 	buf.Buffer = buf.Buffer[:0]
 	return buf
