@@ -9,7 +9,7 @@ type Resetter interface {
 }
 
 type AnyBuffer struct {
-	sync.Mutex
+	locker sync.Mutex
 	Buffer Resetter
 }
 
@@ -33,7 +33,11 @@ func NewAnyPool(maxParallel uint, initFunc func(*AnyBuffer)) *AnyPool {
 
 func (pool *AnyPool) Next() *AnyBuffer {
 	buf := &pool.bufs[pool.cursor.Next()]
-	buf.Lock()
-	buf.Buffer.Reset()
+	buf.locker.Lock()
 	return buf
+}
+
+func (buf *AnyBuffer) Unlock() {
+	buf.Buffer.Reset()
+	buf.locker.Unlock()
 }

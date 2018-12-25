@@ -5,7 +5,7 @@ import (
 )
 
 type BytesBuffer struct {
-	sync.Mutex
+	locker sync.Mutex
 	Buffer []byte
 }
 
@@ -23,7 +23,11 @@ func NewBytesPool(maxParallel uint) *BytesPool {
 
 func (pool *BytesPool) Next() *BytesBuffer {
 	buf := &pool.bufs[pool.cursor.Next()]
-	buf.Lock()
-	buf.Buffer = buf.Buffer[:0]
+	buf.locker.Lock()
 	return buf
+}
+
+func (buf *BytesBuffer) Unlock() {
+	buf.Buffer = buf.Buffer[:0]
+	buf.locker.Unlock()
 }
