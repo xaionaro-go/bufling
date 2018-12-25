@@ -11,13 +11,13 @@ type BytesBuffer struct {
 
 type Bytes struct {
 	cursor cursor
-	bufs []BytesBuffer
+	bufs   []BytesBuffer
 }
 
 func NewBytes(maxParallel uint) *Bytes {
 	return &Bytes{
 		cursor: *newCursor(maxParallel),
-		bufs: make([]BytesBuffer, maxParallel),
+		bufs:   make([]BytesBuffer, maxParallel),
 	}
 }
 

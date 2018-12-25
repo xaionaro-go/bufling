@@ -6,7 +6,7 @@ import (
 
 type cursor struct {
 	maxParallel uint64
-	value uint64
+	value       uint64
 }
 
 func (c *cursor) Next() uint64 {

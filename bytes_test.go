@@ -28,7 +28,7 @@ func BenchmarkBytesAppend(b *testing.B) {
 	tryAppend()
 
 	b.ResetTimer()
-	for i:=0; i<b.N; i++ {
+	for i := 0; i < b.N; i++ {
 		tryAppend()
 	}
 }
