@@ -37,7 +37,11 @@ func (pool *AnyPool) Next() *AnyBuffer {
 	return buf
 }
 
-func (buf *AnyBuffer) Unlock() {
+func (buf *AnyBuffer) Reset() {
 	buf.Buffer.Reset()
+}
+
+func (buf *AnyBuffer) Unlock() {
+	buf.Reset()
 	buf.locker.Unlock()
 }
